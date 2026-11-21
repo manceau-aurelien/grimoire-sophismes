@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Le Grimoire des Sophismes</title>
+<meta name="description" content="Apprenez à repérer les sophismes : un grimoire à remplir et des épreuves pour s'entraîner.">
+<meta name="theme-color" content="#1e130b">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=EB+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css?v=2">
+</head>
+<body>
+<header id="barre">
+  <button id="btnAccueil" class="btn-icone" title="Accueil" aria-label="Accueil">⌂</button>
+  <div id="rang"></div>
+  <div id="compteurs"><span id="nbPages" title="Pages débloquées"></span><span id="encre" title="Encre"></span></div>
+</header>
+
+<main>
+  <section id="ecran-accueil" class="ecran actif"></section>
+  <section id="ecran-livre" class="ecran">
+    <div id="scene">
+      <div id="livre">
+        <div class="page g" id="pageG"></div>
+        <div class="page d" id="pageD"></div>
+        <div id="feuille"><div class="face recto"></div><div class="face verso"></div></div>
+      </div>
+    </div>
+    <nav id="livreNav">
+      <button class="btn-nav" id="prec" aria-label="Page précédente">‹</button>
+      <button class="btn" id="versSommaire">Sommaire</button>
+      <span id="numPage"></span>
+      <button class="btn" id="versEntrainement">S'entraîner</button>
+      <button class="btn-nav" id="suiv" aria-label="Page suivante">›</button>
+    </nav>
+  </section>
+  <section id="ecran-entrainement" class="ecran"></section>
+  <section id="ecran-exercice" class="ecran"></section>
+  <section id="ecran-debat" class="ecran"></section>
+</main>
+
+<div id="lecon" aria-hidden="true"><div id="leconPapier"></div></div>
+<div id="toasts"></div>
+
+<script src="js/sophismes.js?v=2"></script>
+<script src="js/exercices.js?v=2"></script>
+<script src="js/app.js?v=2"></script>
+</body>
+</html>

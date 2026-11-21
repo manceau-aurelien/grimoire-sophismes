@@ -1,0 +1,37 @@
+// Phrases supplémentaires — branche « L'échange ». Format : voir phrases-depart.js.
+(window.PHRASES = window.PHRASES || []).push(
+  // ── sophismes
+  { f: 'citation', t: "« La ministre a dit : “Il faut supprimer des postes” ! » (Sa phrase entière : « Certains disent qu'il faut supprimer des postes ; je m'y oppose. »)", x: "Découpée, la phrase dit le contraire de ce qu'elle pensait." },
+  { f: 'citation', t: "« Darwin lui-même écrit qu'il semble absurde d'expliquer l'œil par la sélection naturelle ! »", x: "Darwin pose cette difficulté pour la résoudre juste après : citer la moitié trahit son propos." },
+  { f: 'repetition', t: "« Je l'ai dit cent fois et je le redis : ce projet est un gâchis. »", x: "Répéter une affirmation ne la rend pas plus vraie." },
+  { f: 'repetition', t: "La sénatrice Vidal (écologiste) : « Le nucléaire est dépassé. Le nucléaire est dépassé. Retenez-le bien : le nucléaire est dépassé. »", x: "La répétition imprime l'idée sans jamais l'argumenter." },
+  { f: 'faux-equilibre', t: "« Pour être neutres, nous invitons un médecin et un militant antivaccin, avec le même temps de parole. »", x: "Mettre à égalité un consensus massif et une position marginale donne une fausse image du débat." },
+  { f: 'faux-equilibre', t: "« Certains disent que la Terre a 4,5 milliards d'années, d'autres 6 000 ans : la question reste ouverte. »", x: "Les preuves ne sont pas également réparties : mettre les deux sur le même plan trompe." },
+
+  // ── phrases correctes
+  { f: null, s: 'homme-de-paille', v: 1, t: "« Tu proposes de limiter les voitures en centre-ville ; je crains que les commerces en souffrent : as-tu des chiffres ? »", x: "On répond à la vraie proposition et on exprime une crainte à vérifier. Simple piste." },
+  { f: null, s: 'homme-de-paille', v: 2, t: "« Tu veux réduire la viande à la cantine, pas la supprimer ; je suis d'accord sur la réduction, mais pas au même rythme. »", x: "La position de l'autre est restituée fidèlement. Probable : le désaccord porte sur un choix." },
+  { f: null, s: 'citation', v: 4, t: "« Elle a dit : “Certains veulent supprimer des postes ; je m'y oppose.” Elle est donc contre les suppressions. »", x: "La citation est complète, et la conclusion en découle. Démontré." },
+  { f: null, s: 'citation', v: 4, t: "« Voici sa phrase entière, avec son contexte : “Je ne crois pas que cette loi suffira.” Il doute donc que la loi suffise. »", x: "On cite sans couper. Démontré." },
+  { f: null, s: 'citation', v: 4, t: "« Darwin pose la difficulté de l'œil, puis explique comment de petites étapes successives la résolvent. »", x: "Le résumé respecte tout le passage. Démontré : c'est ce que dit le texte." },
+  { f: null, s: 'hareng', v: 3, t: "« Tu m'interroges sur le budget : il dérape de 3 % à cause de l'énergie, voici les chiffres poste par poste. »", x: "On répond à la question posée. Très probable : les chiffres sont fournis." },
+  { f: null, s: 'hareng', v: 3, t: "« Ta question porte sur la sécurité du pont : l'inspection de mars n'a relevé aucun défaut. »", x: "La réponse reste sur le sujet. Très probable." },
+  { f: null, s: 'hareng', v: 2, t: "« Ça semble hors sujet, mais c'est lié : le prix de l'énergie explique le dérapage du budget. »", x: "On montre le lien avec la question au lieu de changer de sujet. Probable." },
+  { f: null, s: 'repetition', v: 3, t: "« Je répète la consigne parce qu'elle est importante : on ne court pas au bord de la piscine, les glissades y sont fréquentes. »", x: "On répète pour être entendu, et on donne la raison. Très probable." },
+  { f: null, s: 'repetition', v: 3, t: "« Depuis dix ans, les évaluations successives montrent que cette réforme n'a pas atteint ses objectifs. »", x: "Ce sont des évaluations répétées, pas une affirmation répétée. Très probable." },
+  { f: null, s: 'repetition', v: 3, t: "« Revoir une leçon plusieurs jours de suite aide à la retenir : de nombreuses études sur la mémoire le montrent. »", x: "L'idée est appuyée par des études, pas par la répétition. Très probable." },
+  { f: null, s: 'mitraillage', v: 3, t: "« Le rapport résume quarante études, toutes citées en annexe pour qu'on puisse les vérifier : la tendance est nette. »", x: "Beaucoup de sources, mais toutes vérifiables : ce n'est pas un mitraillage. Très probable." },
+  { f: null, s: 'mitraillage', v: 3, t: "« Je n'avance qu'un argument, mais il est solide : l'essai contrôlé sur 5 000 patients. »", x: "Un seul argument, examinable. Très probable." },
+  { f: null, s: 'mitraillage', v: 2, t: "« Voici mon argument principal, avec sa source : le prix de l'énergie explique l'essentiel de la hausse. »", x: "Un argument clair, qu'on peut discuter. Probable." },
+  { f: null, s: 'charge-preuve', v: 4, t: "« Tu affirmes que ce remède guérit : c'est à toi de montrer les études. »", x: "La preuve est demandée à celui qui affirme. Démontré : c'est la règle d'un débat honnête." },
+  { f: null, s: 'charge-preuve', v: 3, t: "« J'affirme que ce pont est sûr : voici les rapports d'inspection. »", x: "Celui qui affirme apporte lui-même ses preuves. Très probable." },
+  { f: null, s: 'buts', v: 4, t: "« On s'était fixé une baisse de 10 %, on l'a obtenue : l'objectif est atteint. »", x: "L'objectif n'a pas bougé. Démontré." },
+  { f: null, s: 'buts', v: 3, t: "« Tu avais prédit une baisse de 10 % ; elle a eu lieu : j'avais tort de douter. »", x: "On reconnaît le résultat au lieu de changer d'exigence. Très probable." },
+  { f: null, s: 'buts', v: 4, t: "« L'objectif fixé au départ était de 20 % en cinq ans ; on en est à 12 % : il reste du chemin. »", x: "On juge avec l'objectif annoncé au départ. Démontré." },
+  { f: null, s: 'ecossais', v: 4, t: "« Un végétarien ne mange pas de viande, par définition : Marc mange du poulet, il n'est donc pas végétarien. »", x: "C'est la définition reconnue, pas une définition changée pour écarter un contre-exemple. Démontré." },
+  { f: null, s: 'ecossais', v: 4, t: "« J'avais dit qu'aucun sportif ne fume ; Marc est sportif et il fume : j'avais tort. »", x: "On accepte le contre-exemple au lieu de redéfinir le mot. Démontré." },
+  { f: null, s: 'ecossais', v: 4, t: "« Pour exercer comme médecin, il faut un diplôme de médecine ; cet homme n'en a pas : ce n'est pas un vrai médecin. »", x: "Le critère est officiel et fixé d'avance. Démontré." },
+  { f: null, s: 'faux-equilibre', v: 3, t: "« La quasi-totalité des études concluent à un réchauffement d'origine humaine : nous présentons ce consensus, puis les vrais débats sur les solutions. »", x: "On respecte le poids réel des preuves. Très probable." },
+  { f: null, s: 'faux-equilibre', v: 2, t: "« Les économistes sont vraiment partagés sur cette mesure : nous inviterons des avis opposés. »", x: "Ici le débat est réel : donner la parole aux deux camps est juste. Probable." },
+  { f: null, s: 'faux-equilibre', v: 2, t: "« Ce débat oppose deux spécialistes reconnus, dont les études sont publiées : les deux positions méritent d'être entendues. »", x: "L'équilibre reflète un vrai désaccord entre experts. Probable." },
+);

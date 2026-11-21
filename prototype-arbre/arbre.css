@@ -1,0 +1,134 @@
+:root {
+  --bois: #1e130b; --parch: #f3e6c8; --parch2: #e6d2a6; --encre: #3a2717; --encre2: #6b5236;
+  --or: #c9a24a; --or2: #e8c873; --rouge: #9b1c1c; --vert: #2f6b35;
+  --titre: 'Cinzel', Georgia, serif; --texte: 'EB Garamond', 'Palatino Linotype', Georgia, serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; }
+body {
+  font-family: var(--texte); color: var(--parch); font-size: 18px; overflow: hidden; display: flex; flex-direction: column;
+  background: radial-gradient(ellipse at 50% 80%, rgba(255, 190, 110, .12), transparent 60%), linear-gradient(180deg, #24160c, var(--bois));
+  -webkit-tap-highlight-color: transparent;
+}
+button { font-family: inherit; cursor: pointer; }
+.cache { display: none !important; }
+
+#barre { display: flex; align-items: center; gap: 14px; padding: 8px 14px; flex-wrap: wrap;
+  background: linear-gradient(180deg, #3a2414, #24160c); border-bottom: 1px solid rgba(201, 162, 74, .4); z-index: 3; }
+.titre { font-family: var(--titre); font-weight: 700; color: var(--or2); font-size: 20px; letter-spacing: .5px; }
+.titre span { font-size: 12px; color: var(--parch2); opacity: .7; font-weight: 500; margin-left: 4px; }
+#compteurs { font-size: 16px; color: var(--parch2); }
+#compteurs b { color: var(--or2); }
+.actions { margin-left: auto; display: flex; gap: 8px; flex-wrap: wrap; }
+.actions button, #zoom button { background: rgba(243, 230, 200, .08); color: var(--parch); border: 1px solid rgba(201, 162, 74, .5);
+  border-radius: 8px; padding: 6px 12px; font-size: 16px; }
+.actions button:hover, #zoom button:hover { background: rgba(201, 162, 74, .2); }
+.actions button.principal { background: linear-gradient(180deg, #c9a24a, #9a7428); color: #24160c; font-weight: 600; border-color: #e8c873; }
+.actions button[aria-pressed="true"] { background: rgba(201, 162, 74, .35); }
+
+#scene { position: relative; flex: 1; min-height: 0; }
+#arbre { width: 100%; height: 100%; display: block; touch-action: none; cursor: grab; user-select: none; }
+#arbre.glisse { cursor: grabbing; }
+#zoom { position: absolute; right: 12px; bottom: 12px; display: flex; flex-direction: column; gap: 6px; }
+#zoom button { width: 40px; height: 40px; padding: 0; font-size: 20px; }
+#legende { position: absolute; left: 12px; bottom: 12px; display: flex; gap: 14px; font-size: 15px; color: var(--parch2);
+  background: rgba(20, 12, 6, .6); padding: 6px 10px; border-radius: 8px; flex-wrap: wrap; }
+.pastille { display: inline-grid; place-items: center; width: 18px; height: 18px; border-radius: 50%; font-style: normal; font-size: 11px; vertical-align: -3px; }
+.pastille.scelle { background: #4a3b2e; color: #a89478; border: 1px solid #6b5a46; }
+.pastille.ouvert { background: var(--parch); border: 3px solid var(--or); }
+.pastille.maitrise { background: var(--or); color: #24160c; border: 2px solid var(--or2); }
+
+/* ───── arbre (SVG) */
+.bois { fill: none; stroke: #6b4325; stroke-linecap: round; }
+.bois.vif { stroke: #8a5a30; }
+.bois.or { stroke: #b98d3a; }
+.bois.pointille { stroke: #5a4330; stroke-dasharray: 6 8; opacity: .6; }
+.noeud { cursor: pointer; }
+.noeud .rond { stroke-width: 4; }
+.noeud.scelle .rond { fill: #3d3025; stroke: #5f4e3c; }
+.noeud.scelle .sym { fill: #a89478; font-size: 22px; font-family: var(--titre); }
+.noeud.ouvert .rond { fill: var(--parch); }
+.noeud.maitrise .rond { stroke: var(--or2); }
+.noeud.maitrise .sym { fill: #fff6dc; font-size: 22px; }
+.noeud.fantome { opacity: .55; }
+.noeud.fantome .rond { fill: #2c2118; stroke: #5f4e3c; stroke-dasharray: 4 4; }
+.noeud.choisi .halo { stroke: var(--or2); stroke-width: 3; fill: none; }
+.noeud:hover .rond { filter: brightness(1.12); }
+.noeud.entree .rond { stroke-width: 6; }
+.nom { fill: var(--parch); font-size: 16px; text-anchor: middle; paint-order: stroke; stroke: #1a1008; stroke-width: 4px; font-family: var(--texte); }
+.noeud.fantome .nom { fill: #b8a78c; }
+.sceau { stroke: #1a1008; stroke-width: 1.5; }
+.sceau.plein { fill: var(--or2); }
+.sceau.vide { fill: #4a3b2e; }
+.branche-nom { font-family: var(--titre); font-weight: 700; font-size: 19px; text-anchor: middle; paint-order: stroke; stroke: #1a1008; stroke-width: 5px; }
+.branche-q { font-style: italic; font-size: 16px; fill: var(--parch2); text-anchor: middle; paint-order: stroke; stroke: #1a1008; stroke-width: 4px; }
+.famille-nom { font-family: var(--titre); font-size: 13px; letter-spacing: 1px; font-weight: 700; text-anchor: middle; text-transform: uppercase; paint-order: stroke; stroke: #1a1008; stroke-width: 4px; }
+.tronc-nom { font-family: var(--titre); font-size: 22px; fill: var(--or2); text-anchor: middle; letter-spacing: 3px; paint-order: stroke; stroke: #1a1008; stroke-width: 5px; }
+.neuf { animation: pousse .9s cubic-bezier(.2, 1.6, .4, 1) both; transform-box: fill-box; transform-origin: center; }
+@keyframes pousse { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.neuf-trait { animation: trace 1s ease-out both; }
+@keyframes trace { from { opacity: 0; } to { opacity: 1; } }
+
+/* ───── panneau */
+#panneau { position: fixed; top: 0; right: 0; height: 100%; width: 360px; max-width: 92vw; z-index: 4;
+  background: linear-gradient(180deg, #f6ead0, #e9d6ae); color: var(--encre); box-shadow: -8px 0 30px rgba(0, 0, 0, .5);
+  padding: 18px 20px 24px; overflow-y: auto; transform: translateX(105%); transition: transform .3s ease; }
+#panneau.ouvert { transform: none; }
+#panneau .fermer { float: right; width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--encre2); background: var(--parch2); font-size: 20px; color: var(--encre); }
+#panneau .etiquette { display: inline-block; color: #fff; border-radius: 12px; padding: 1px 10px; font-size: 14px; font-family: var(--titre); }
+#panneau h2 { font-family: var(--titre); margin: 10px 0 2px; font-size: 24px; }
+#panneau .alias { font-style: italic; color: var(--encre2); margin: 0 0 8px; }
+#panneau .q { font-style: italic; border-left: 3px solid var(--or); padding-left: 10px; margin: 10px 0; }
+#panneau .exemple { background: rgba(255, 255, 255, .45); border: 1px solid rgba(58, 39, 23, .2); border-radius: 8px; padding: 10px 12px; }
+#panneau .statut { margin-top: 14px; font-weight: 600; }
+#panneau .chemin { font-size: 16px; color: var(--encre2); }
+#panneau ol { padding-left: 22px; margin: 6px 0; }
+#panneau li.fait { color: var(--vert); }
+#panneau li.ici { font-weight: 600; }
+
+/* ───── modale d'entraînement */
+#modale { position: fixed; inset: 0; z-index: 6; background: rgba(10, 6, 3, .7); display: grid; place-items: center; padding: 14px; }
+#carte { width: min(640px, 100%); max-height: 92vh; overflow-y: auto; background: linear-gradient(180deg, #f6ead0, #e9d6ae);
+  color: var(--encre); border-radius: 12px; padding: 20px 22px; box-shadow: 0 20px 60px rgba(0, 0, 0, .6); border: 2px solid var(--or); }
+#carte .entete { display: flex; justify-content: space-between; align-items: center; font-family: var(--titre); font-size: 14px; color: var(--encre2); }
+#carte .enonce { font-size: 21px; line-height: 1.4; margin: 14px 0; }
+#carte .choix { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+#carte .choix button { border: 1px solid var(--encre2); background: var(--parch2); border-radius: 8px; padding: 10px; font-size: 17px; color: var(--encre); text-align: left; }
+#carte .choix button .pt { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; }
+#carte .choix button.bonne { background: rgba(47, 107, 53, .25); border-color: var(--vert); }
+#carte .choix button.mauvaise { background: rgba(155, 28, 28, .18); border-color: var(--rouge); }
+#carte .choix button:disabled { cursor: default; }
+#carte .verdict { margin-top: 12px; font-size: 17px; }
+#carte .deblocage { margin-top: 10px; padding: 10px 12px; border-radius: 8px; background: rgba(201, 162, 74, .25); border: 1px solid var(--or); }
+#carte .bas { display: flex; gap: 8px; justify-content: flex-end; margin-top: 14px; flex-wrap: wrap; }
+#carte .bas button { border-radius: 8px; padding: 8px 16px; font-size: 17px; border: 1px solid var(--encre2); background: var(--parch2); color: var(--encre); }
+#carte .bas button.principal { background: linear-gradient(180deg, #c9a24a, #9a7428); border-color: #7a5a1c; color: #24160c; font-weight: 600; }
+#carte .sceaux { letter-spacing: 3px; color: var(--or); }
+
+#toasts { position: fixed; top: 70px; left: 50%; transform: translateX(-50%); z-index: 7; display: flex; flex-direction: column; gap: 8px; pointer-events: none; width: min(560px, 92vw); }
+.toast { background: rgba(30, 19, 11, .95); border: 1px solid var(--or); color: var(--parch); padding: 10px 14px; border-radius: 10px; font-size: 17px;
+  animation: toast 4.5s ease both; box-shadow: 0 8px 24px rgba(0, 0, 0, .5); }
+@keyframes toast { 0% { opacity: 0; transform: translateY(-10px); } 8%, 85% { opacity: 1; transform: none; } 100% { opacity: 0; } }
+
+@media (max-width: 720px) {
+  .titre { font-size: 16px; }
+  #barre { gap: 6px 10px; padding: 6px 8px; }
+  .actions { margin-left: 0; width: 100%; }
+  .actions button { padding: 5px 8px; font-size: 14px; flex: 1; }
+  #compteurs { font-size: 14px; }
+  #legende { font-size: 13px; gap: 8px; bottom: 8px; left: 8px; right: 60px; }
+  #panneau { top: auto; bottom: 0; height: 62vh; width: 100%; max-width: none; border-radius: 14px 14px 0 0; transform: translateY(105%); }
+  #carte .choix { grid-template-columns: 1fr; }
+  #carte .enonce { font-size: 19px; }
+}
+
+/* ───── « pas de sophisme » et échelle de vérité probable */
+#carte .choix button.aucun { grid-column: 1 / -1; text-align: center; font-weight: 600; background: #efe3c4; border-style: dashed; }
+#carte .echelle { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+#carte .echelle button { border: 1px solid var(--encre2); background: var(--parch2); border-radius: 8px; padding: 8px 10px; color: var(--encre); text-align: left; font-size: 16px; font-family: inherit; }
+#carte .echelle button span { display: block; font-size: 14px; color: var(--encre2); margin-top: 2px; }
+#carte .echelle button.bonne { background: rgba(47, 107, 53, .25); border-color: var(--vert); }
+#carte .echelle button.presque { background: rgba(201, 162, 74, .3); border-color: var(--or); }
+#carte .echelle button.mauvaise { background: rgba(155, 28, 28, .18); border-color: var(--rouge); }
+#carte .perte { margin-top: 8px; color: var(--rouge); font-weight: 600; }
+@media (max-width: 720px) { #carte .echelle { grid-template-columns: 1fr; } }

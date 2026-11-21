@@ -1,0 +1,14 @@
+{
+  "name": "Le Grimoire des Sophismes",
+  "short_name": "Sophismes",
+  "description": "Apprenez à repérer les sophismes : un grimoire à remplir et des épreuves pour s'entraîner.",
+  "lang": "fr",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#1e130b",
+  "theme_color": "#1e130b",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

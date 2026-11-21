@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>L'Arbre des Sophismes — prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=EB+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="arbre.css?v=2">
+</head>
+<body>
+<header id="barre">
+  <div class="titre">L'Arbre des Sophismes <span>prototype</span></div>
+  <div id="compteurs"></div>
+  <div class="actions">
+    <button id="btnEntr" class="principal">S'entraîner</button>
+    <button id="btnDemo" title="Maîtrise d'un coup le sophisme que l'algorithme proposerait">Démo : avancer</button>
+    <button id="btnTout" aria-pressed="false">Voir tout l'arbre</button>
+    <button id="btnRaz" title="Repartir de zéro">Recommencer</button>
+  </div>
+</header>
+
+<main id="scene">
+  <svg id="arbre" xmlns="http://www.w3.org/2000/svg" aria-label="Arbre de compétences des sophismes"></svg>
+  <div id="zoom">
+    <button id="zPlus" aria-label="Zoomer">+</button>
+    <button id="zMoins" aria-label="Dézoomer">−</button>
+    <button id="zCadre" aria-label="Recadrer">⤢</button>
+  </div>
+  <div id="legende">
+    <span><i class="pastille scelle">?</i> scellé</span>
+    <span><i class="pastille ouvert"></i> ouvert</span>
+    <span><i class="pastille maitrise">✦</i> maîtrisé (3 sceaux)</span>
+  </div>
+</main>
+
+<aside id="panneau" aria-hidden="true"></aside>
+
+<div id="modale" class="cache" role="dialog" aria-modal="true">
+  <div id="carte"></div>
+</div>
+<div id="toasts"></div>
+
+<script src="../js/exercices.js?v=3"></script>
+<script src="../js/phrases-depart.js?v=1"></script>
+<script src="../js/phrases-suit.js?v=1"></script>
+<script src="../js/phrases-preuves.js?v=1"></script>
+<script src="../js/phrases-ailleurs.js?v=1"></script>
+<script src="../js/phrases-echange.js?v=1"></script>
+<script src="../js/phrases-pistes.js?v=1"></script>
+<script src="inventaire-data.js?v=1"></script>
+<script src="arbre.js?v=2"></script>
+</body>
+</html>
