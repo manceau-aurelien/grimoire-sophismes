@@ -27,6 +27,16 @@ const MODES = {
 };
 const PALIERS = { 1: 10, 2: 16, 3: 22 };          // pages trouvées pour ouvrir les débats de chaque palier
 const ouvert = m => nbTrouves() >= MODES[m].req;
+// Toutes les phrases d'entraînement : exercices.js + phrases-*.js (seulement celles des sophismes du Grimoire).
+// Au moins la moitié sont des arguments corrects, pour ne pas s'habituer à voir des sophismes partout.
+const TOUTES = [...EXERCICES, ...(window.PHRASES || []).filter(e => SOPH[e.f || e.s])];
+// Vérité probable des arguments corrects : sans sophisme ne veut pas dire certain.
+const VERITE = {
+  4: { nom: 'Démontré', def: 'La conclusion découle de faits établis : déduction valide ou preuves massives.' },
+  3: { nom: 'Très probable', def: 'Des preuves solides et convergentes : études, mesures, consensus des spécialistes.' },
+  2: { nom: 'Probable', def: 'Un bon indice, mais limité : on pourrait encore se tromper.' },
+  1: { nom: 'Simple piste', def: "Le raisonnement est honnête, mais il ne fait que suggérer : c'est à vérifier." },
+};
 
 function toast(html) {
   const t = document.createElement('div'); t.className = 'toast'; t.innerHTML = html;
@@ -119,9 +129,11 @@ function accueil() {
       <button class="btn" id="aLivre">Ouvrir le Grimoire</button>
       <button class="btn" id="aEntr">S'entraîner</button>
     </div>
-    <div class="accueil-stats">${n ? `${n} page${n > 1 ? 's' : ''} sur ${SOPHISMES.length} · ${rang()}` : "Toutes les pages sont encore scellées. L'entraînement brisera les sceaux."}</div>`;
+    <div class="accueil-stats">${n ? `${n} page${n > 1 ? 's' : ''} sur ${SOPHISMES.length} · ${rang()}` : "Toutes les pages sont encore scellées. L'entraînement brisera les sceaux."}</div>
+    <div class="accueil-btns outils" id="accueilOutils"></div>`;
   $('#livreFerme').onclick = $('#aLivre').onclick = () => ouvrirLivre();
   $('#aEntr').onclick = entrainement;
+  if (typeof majBoutonsAccueil === 'function') majBoutonsAccueil();   // défini dans installation.js
   montrer('accueil');
 }
 
@@ -255,10 +267,10 @@ function ouvrirLecon(id) {
     + (enfants.length ? `<p>Cas particuliers : ${enfants.map(x => trouve(x.id) ? `<b>${x.n}</b>` : '<i>page scellée</i>').join(', ')}.</p>` : '');
   // mini-quiz : 2 exemples de ce sophisme, 1 autre sophisme du même chapitre (hors famille), 1 argument correct
   const famille2 = x => x.f === s.p || SOPH[x.f].p === id;
-  const siens = melange(EXERCICES.filter(x => x.f === id)).slice(0, 2);
-  const voisins = EXERCICES.filter(x => x.f && x.f !== id && !famille2(x));
+  const siens = melange(TOUTES.filter(x => x.f === id)).slice(0, 2);
+  const voisins = TOUTES.filter(x => x.f && x.f !== id && !famille2(x));
   const proches = voisins.filter(x => SOPH[x.f].ch === s.ch);
-  const corrects = EXERCICES.filter(x => !x.f), corrSiens = corrects.filter(x => x.s === id);
+  const corrects = TOUTES.filter(x => !x.f), corrSiens = corrects.filter(x => x.s === id);
   const quiz = melange([...siens, hasard(proches.length ? proches : voisins), hasard(corrSiens.length ? corrSiens : corrects)]);
   const repQuiz = x => x.f === id ? 'ce' : x.f ? 'autre' : 'aucun';
   $('#leconPapier').innerHTML = `
@@ -328,19 +340,23 @@ function entrainement() {
 const NB_Q = 10;
 let Q = null;
 function choisirItems(mode) {
-  const soph = EXERCICES.filter(x => x.f), correct = EXERCICES.filter(x => !x.f);
+  const soph = TOUTES.filter(x => x.f), correct = TOUTES.filter(x => !x.f);
   const neufs = soph.filter(x => !trouve(x.f)), connus = soph.filter(x => trouve(x.f));
   const pris = new Set(), res = [];
   const prendre = pool => { const libres = pool.filter(x => !pris.has(x)); if (!libres.length) return false; const x = hasard(libres); pris.add(x); res.push(x); return true; };
+  // Arguments corrects : 5 sur 10 pour l'Apprenti, 3 sur 10 pour le Compagnon et le Maître.
+  const nbCorrects = mode === 'apprenti' ? 5 : 3;
+  const poolCorrect = mode === 'maitre' ? correct.filter(x => trouve(x.s)) : correct;
+  for (let k = 0; k < nbCorrects; k++) prendre(poolCorrect);
   while (res.length < NB_Q) {
     const r = Math.random();
-    let ok = false;
-    if (mode === 'apprenti') ok = r < .33 ? prendre(correct) : r < .75 && neufs.length ? prendre(neufs) : prendre(soph);
+    let ok;
+    if (mode === 'apprenti') ok = r < .6 && neufs.length ? prendre(neufs) : prendre(soph);
     else if (mode === 'compagnon') ok = r < .3 && neufs.length ? prendre(neufs) : prendre(connus.length ? connus : soph);
     else ok = prendre(connus);
     if (!ok && !prendre(mode === 'maitre' ? connus : soph)) break;
   }
-  return res;
+  return melange(res);
 }
 function lancer(mode) {
   Q = { mode, items: choisirItems(mode), i: 0, bilan: [], serie: 0, nouveaux: [] };
@@ -359,15 +375,16 @@ function question() {
   const prog = `<div class="progres">${Q.items.map((_, k) => `<i class="${k < Q.i ? (Q.bilan[k] ? 'ok' : 'ko') : ''}"></i>`).join('')}</div>`;
   let rep = '';
   if (Q.mode === 'apprenti') rep = `<div class="consigne">Sophisme ou argument correct ?</div><div class="reponses deux"><button class="rep" data-v="1">Sophisme</button><button class="rep" data-v="0">Argument correct</button></div>`;
-  else if (Q.mode === 'compagnon') { Q.opts = options(x.f); rep = `<div class="consigne">Quel est ce sophisme ?</div><div class="reponses">${Q.opts.map(s => `<button class="rep" data-id="${s.id}">${s.n}</button>`).join('')}</div>`; }
+  else if (Q.mode === 'compagnon') { Q.opts = options(x.f || x.s); rep = `<div class="consigne">Quel est ce sophisme ? (ou n'y en a-t-il pas ?)</div><div class="reponses">${Q.opts.map(s => `<button class="rep" data-id="${s.id}">${s.n}</button>`).join('')}<button class="rep aucun" data-id="aucun">✓ Pas de sophisme</button></div>`; }
   else rep = `<div class="consigne">Nommez ce sophisme</div><form class="saisie" id="formNom" autocomplete="off"><input id="nomSaisi" placeholder="Votre réponse…" autocapitalize="off" spellcheck="false"><button class="btn" type="submit">Valider</button></form>
-    <div class="actions" style="justify-content:flex-start"><button class="btn sombre" id="indice" ${S.encre < 3 ? 'disabled' : ''}>Indice (3 ✒️)</button><button class="btn sombre" id="passe">Je ne sais pas</button></div><div id="zoneIndice"></div>`;
+    <div class="actions" style="justify-content:flex-start"><button class="btn sombre" id="indice" ${S.encre < 3 ? 'disabled' : ''}>Indice (3 ✒️)</button><button class="btn sombre" id="passe">Je ne sais pas</button><button class="btn sombre" id="aucunM">✓ Pas de sophisme</button></div><div id="zoneIndice"></div>`;
   $('#ecran-exercice').innerHTML = `<div class="panneau">${prog}<div class="carte-q"><div class="surtitre">${MODES[Q.mode].nom} · question ${Q.i + 1}/${Q.items.length}</div><p class="enonce">${esc(x.t)}</p>${rep}<div id="retour"></div></div></div>`;
   const E = $('#ecran-exercice');
   if (Q.mode === 'maitre') {
     $('#formNom').onsubmit = e => { e.preventDefault(); const v = $('#nomSaisi').value.trim(); if (v) corrigerMaitre(v); };
     $('#passe').onclick = () => corrigerMaitre('');
-    $('#indice').onclick = () => { S.encre -= 3; sauver(); majBarre(); const c = CHAP[SOPH[x.f].ch]; $('#zoneIndice').innerHTML = `<p class="retour mi">Le pont casse dans le chapitre <b>${c.num} · ${c.nom}</b> : « ${c.question} »</p>`; $('#indice').disabled = true; };
+    $('#aucunM').onclick = () => corrigerMaitre(null);
+    $('#indice').onclick = () => { S.encre -= 3; sauver(); majBarre(); if (!x.f) { $('#zoneIndice').innerHTML = `<p class="retour mi">Relisez bien : le raisonnement casse-t-il vraiment quelque part ?</p>`; $('#indice').disabled = true; return; } const c = CHAP[SOPH[x.f].ch]; $('#zoneIndice').innerHTML = `<p class="retour mi">Le pont casse dans le chapitre <b>${c.num} · ${c.nom}</b> : « ${c.question} »</p>`; $('#indice').disabled = true; };
     setTimeout(() => $('#nomSaisi') && $('#nomSaisi').focus(), 50);
   } else E.querySelectorAll('.rep').forEach(b => b.onclick = () => corriger(b));
 }
@@ -379,7 +396,7 @@ function finQuestion(juste, html, cls) {
   Q.bilan[Q.i] = juste;
   S.rep++; if (juste) { S.justes++; Q.serie++; S.serieMax = Math.max(S.serieMax, Q.serie); if (Q.serie % 5 === 0) { S.encre += 5; toast(`Série de ${Q.serie} ! <b>+5 encre</b>`); } } else Q.serie = 0;
   sauver(); majBarre();
-  $('#ecran-exercice').querySelectorAll('.rep, #formNom button, #formNom input, #indice, #passe').forEach(b => b.disabled = true);
+  $('#ecran-exercice').querySelectorAll('.rep, #formNom button, #formNom input, #indice, #passe, #aucunM').forEach(b => b.disabled = true);
   const derniere = Q.i + 1 >= Q.items.length;
   $('#retour').innerHTML = `<div class="retour ${cls}">${html}<div class="actions">${html.includes('data-voir') ? '' : ''}<button class="btn" id="suivante">${derniere ? 'Voir le bilan' : 'Question suivante ›'}</button></div></div>`;
   $('#retour').querySelectorAll('[data-voir]').forEach(b => b.onclick = () => ouvrirLecon(b.dataset.voir));
@@ -388,8 +405,34 @@ function finQuestion(juste, html, cls) {
   $('#retour').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 const lienLecon = id => trouve(id) ? `<button class="btn-lecon" data-voir="${id}">Lire la leçon</button>` : '';
+// Argument correct : explication, ressemblance et vérité probable
+function texteCorrect(x, titre) {
+  return `<h4>${titre}</h4><p>${esc(x.x)}</p>${x.s && trouve(x.s) ? `<p class="famille">Il ressemble à : <b>${SOPH[x.s].n}</b>, mais il reste du bon côté de la frontière.</p>` : ''}`
+    + (x.v ? `<p class="famille">Vérité probable de la conclusion : <b>${VERITE[x.v].nom}</b> — ${VERITE[x.v].def}</p>` : '');
+}
+// Argument correct bien repéré : on demande à quel point la conclusion est sûre
+function demanderNiveau(x) {
+  $('#ecran-exercice').querySelectorAll('.rep, #formNom button, #formNom input, #indice, #passe, #aucunM').forEach(b => b.disabled = true);
+  if (!x.v) { gagner(null, 0, 1); return finQuestion(true, texteCorrect(x, "✔ Exact, l'argument tient debout"), 'ok'); }
+  $('#retour').innerHTML = `<div class="retour mi"><h4>✔ Exact, pas de sophisme.</h4><p>Mais sans sophisme ne veut pas dire certain : <b>à quel point la conclusion est-elle sûre ?</b></p>
+    <div class="echelle">${[4, 3, 2, 1].map(v => `<button class="niv" data-v="${v}"><b>${VERITE[v].nom}</b><span>${VERITE[v].def}</span></button>`).join('')}</div></div>`;
+  $('#retour').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  $('#retour').querySelectorAll('.niv').forEach(b => b.onclick = () => {
+    const ecart = Math.abs(+b.dataset.v - x.v), nom = `« ${VERITE[x.v].nom} »`;
+    gagner(null, 0, ecart === 0 ? 2 : 1);
+    const titre = ecart === 0 ? `✔ Exact, et bien jaugé : ${nom}` : ecart === 1 ? `≈ Exact, et presque bien jaugé : plutôt ${nom}` : `✔ Exact, mais la conclusion est plutôt ${nom}`;
+    finQuestion(true, texteCorrect(x, titre), ecart <= 1 ? 'ok' : 'mi');
+  });
+}
 function corriger(b) {
   const x = Q.items[Q.i];
+  if (Q.mode !== 'apprenti' && !x.f) {     // Compagnon : argument correct
+    const juste = b.dataset.id === 'aucun';
+    b.classList.add(juste ? 'bonne' : 'mauvaise');
+    if (juste) return demanderNiveau(x);
+    $('#ecran-exercice').querySelector('.rep.aucun').classList.add('bonne');
+    return finQuestion(false, texteCorrect(x, "✘ Il n'y a pas de sophisme ici"), 'ko');
+  }
   if (Q.mode === 'apprenti') {
     const ditSoph = b.dataset.v === '1', juste = ditSoph === !!x.f;
     b.classList.add(juste ? 'bonne' : 'mauvaise');
@@ -398,8 +441,8 @@ function corriger(b) {
       if (juste) { nouveau = decouvrir(x.f); if (nouveau) Q.nouveaux.push(x.f); gagner(x.f, 1, 1); }
       finQuestion(juste, blocSoph(x.f, (juste ? '✔ Bien vu, c\'est un sophisme' : '✘ C\'était un sophisme') + (nouveau ? ' <span class="badge-nouveau">page débloquée</span>' : '')) + `<p>${esc(x.x)}</p>` + (juste ? '' : '<p class="famille">Trouvez-le une prochaine fois pour briser le sceau de sa page.</p>') + lienLecon(x.f), juste ? 'ok' : 'ko');
     } else {
-      if (juste) gagner(null, 0, 1);
-      finQuestion(juste, `<h4>${juste ? '✔ Exact, l\'argument tient debout' : '✘ Cet argument est correct'}</h4><p>${esc(x.x)}</p>${x.s && trouve(x.s) ? `<p class="famille">Il ressemble à : <b>${SOPH[x.s].n}</b>, mais il reste du bon côté de la frontière.</p>` : ''}`, juste ? 'ok' : 'ko');
+      if (juste) return demanderNiveau(x);
+      finQuestion(false, texteCorrect(x, '✘ Cet argument est correct'), 'ko');
     }
   } else {
     const juste = b.dataset.id === x.f;
@@ -431,7 +474,13 @@ function reconnaitre(saisie) {
   return meilleur;
 }
 function corrigerMaitre(saisie) {
-  const x = Q.items[Q.i], vrai = SOPH[x.f], id = reconnaitre(saisie);
+  const x = Q.items[Q.i];
+  if (!x.f) {      // argument correct
+    if (saisie === null) return demanderNiveau(x);
+    return finQuestion(false, texteCorrect(x, saisie ? `✘ Vous avez répondu « ${esc(saisie)} », mais il n'y a pas de sophisme ici` : "✘ Il n'y avait pas de sophisme ici"), 'ko');
+  }
+  if (saisie === null) return finQuestion(false, blocSoph(x.f, '✘ Il y avait bien un sophisme') + `<p>${esc(x.x)}</p>` + lienLecon(x.f), 'ko');
+  const vrai = SOPH[x.f], id = reconnaitre(saisie);
   if (id === x.f) {
     gagner(x.f, 3, 3);
     finQuestion(true, blocSoph(x.f, '✔ Parfaitement nommé') + `<p>${esc(x.x)}</p>` + lienLecon(x.f), 'ok');

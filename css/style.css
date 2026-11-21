@@ -255,3 +255,18 @@ main { position: relative; height: calc(100% - var(--barre)); }
   #numPage { display: none; }
   .reponses.deux { grid-template-columns: 1fr; }
 }
+
+/* ───── « pas de sophisme » et échelle de vérité probable */
+.reponses .rep.aucun { grid-column: 1 / -1; text-align: center; font-weight: 600; border-style: dashed; }
+.echelle { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+.echelle .niv { border: 1px solid var(--encre2); background: var(--parch2); border-radius: 8px; padding: 8px 10px; color: var(--encre); text-align: left; font-size: 16px; }
+.echelle .niv span { display: block; font-size: 14px; color: var(--encre2); margin-top: 2px; }
+.echelle .niv:hover { filter: brightness(1.05); }
+@media (max-width: 520px) { .echelle { grid-template-columns: 1fr; } }
+
+/* ───── installation et sauvegarde */
+.accueil-btns.outils { margin-top: 6px; }
+.accueil-btns.outils .btn { font-size: 14px; padding: 8px 14px; }
+#leconPapier textarea { font-family: monospace; border: 1px solid var(--encre2); border-radius: 6px; background: rgba(255,255,255,.5); color: var(--encre); padding: 6px; word-break: break-all; }
+#leconPapier ol { padding-left: 22px; }
+#leconPapier .btn.sombre { background: transparent; color: var(--encre); border-color: var(--encre2); }

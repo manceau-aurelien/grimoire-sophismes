@@ -1,0 +1,86 @@
+// Débats supplémentaires. Même format que DEBATS dans exercices.js :
+// gens : les participants (n nom, r rôle, c couleur) ; lignes : p = index du participant, t = réplique,
+// f = sophisme caché (facultatif), x = explication. Personnages fictifs, camps variés.
+DEBATS.push(
+  {
+    id: 'cantine', titre: 'Une cantine 100 % bio', palier: 1,
+    gens: [{ n: 'M. Garnier', r: 'gestionnaire de la cantine', c: '#2f6e8e' }, { n: 'Mme Diallo', r: "mère d'élève", c: '#7a4e9e' }, { n: 'Lucas', r: 'collégien', c: '#b5651d' }],
+    lignes: [
+      { p: 1, t: "Je propose de passer la cantine en 100 % bio dès la rentrée." },
+      { p: 0, t: "Le bio coûte en moyenne 20 à 30 % plus cher : il faudrait augmenter le prix du repas ou trouver un budget." },
+      { p: 1, t: "Toutes les cantines passent au bio aujourd'hui, on ne va pas rester les derniers !", f: 'popularite', x: "Que beaucoup d'autres le fassent ne dit pas si c'est le bon choix pour cette cantine, avec ce budget." },
+      { p: 2, t: "Moi, du moment qu'il y a des frites le vendredi, ça me va." },
+      { p: 0, t: "Si on accepte le bio pour les légumes, bientôt on nous réclamera du homard et le collège fera faillite.", f: 'pente-glissante', x: "Rien ne montre que des légumes bio mènent au homard : chaque étape est imaginée." },
+      { p: 1, t: "Personne ne parle de homard : je parle des légumes et des laitages, en commençant par une partie des repas." },
+      { p: 0, t: "Et puis vous faites vos courses au supermarché discount : vos leçons sur le bio, très peu pour moi.", f: 'tu-quoque', x: "Ses courses personnelles ne disent rien de la valeur de sa proposition pour la cantine." },
+      { p: 2, t: "On pourrait tester un repas bio par semaine et demander aux élèves ce qu'ils en pensent." },
+    ],
+  },
+  {
+    id: 'trottinettes', titre: 'Les trottinettes en libre-service', palier: 1,
+    gens: [{ n: 'Mme Lefort', r: 'adjointe au maire', c: '#2e7d5b' }, { n: 'M. Okafor', r: 'loueur de trottinettes', c: '#c0503f' }, { n: 'Mme Petit', r: 'association de piétons', c: '#5b5ea6' }],
+    lignes: [
+      { p: 0, t: "Les plaintes de piétons ont triplé cette année : nous envisageons d'encadrer les trottinettes." },
+      { p: 1, t: "J'en fais tous les jours depuis deux ans et je n'ai jamais eu le moindre accident : elles ne sont pas dangereuses.", f: 'anecdote', x: "Son expérience personnelle ne pèse rien face aux chiffres des hôpitaux." },
+      { p: 2, t: "Les urgences de la ville ont compté 140 blessés liés aux trottinettes cette année, contre 60 l'an dernier." },
+      { p: 1, t: "Ceux qui veulent les encadrer veulent ramener la ville au Moyen Âge, sans aucun transport moderne.", f: 'homme-de-paille', x: "Encadrer les trottinettes devient « supprimer tout transport moderne »." },
+      { p: 0, t: "Personne ne parle d'interdire : nous proposons des places de stationnement et une vitesse limitée." },
+      { p: 2, t: "Ces engins de malheur sèment le chaos sur nos trottoirs !", f: 'langage-charge', x: "« Engins de malheur », « chaos » : les mots jugent à la place des arguments, alors que les chiffres suffisaient." },
+      { p: 1, t: "Des places de stationnement, on peut en discuter, si elles sont bien situées." },
+    ],
+  },
+  {
+    id: 'service-national', titre: 'Un service national obligatoire ?', palier: 2,
+    gens: [{ n: 'M. Roux', r: 'député souverainiste', c: '#1f4e79' }, { n: 'Mme Vidal', r: 'sénatrice écologiste', c: '#2e7d32' }, { n: 'M. Garcia', r: 'historien', c: '#6d4c41' }],
+    lignes: [
+      { p: 0, t: "Je propose un service national obligatoire de six mois pour tous les jeunes de 18 ans." },
+      { p: 1, t: "Combien cela coûterait-il, et qui encadrerait 800 000 jeunes chaque année ?" },
+      { p: 0, t: "Nos grands-parents ont tous fait leur service militaire, et le pays s'en portait très bien.", f: 'tradition', x: "Que cela se faisait autrefois ne dit pas si c'est utile aujourd'hui, ni à quel prix." },
+      { p: 2, t: "Les études sur l'ancien service montrent des effets mitigés : utile pour certains jeunes, beaucoup moins pour d'autres." },
+      { p: 1, t: "Ce projet vient d'un parti nationaliste : il ne peut servir qu'à embrigader la jeunesse.", f: 'genetique', x: "Il faut juger le projet lui-même, pas seulement le parti qui le propose." },
+      { p: 0, t: "Soit nous rétablissons le service, soit notre jeunesse sombrera dans l'individualisme.", f: 'faux-dilemme', x: "Il existe bien d'autres façons de développer l'engagement : service civique volontaire, associations, école." },
+      { p: 2, t: "On pourrait comparer avec les pays qui ont un service civique volontaire et regarder leurs résultats." },
+    ],
+  },
+  {
+    id: 'taxe-avion', titre: 'Taxer les billets d\'avion', palier: 2,
+    gens: [{ n: 'Mme Moreau', r: 'porte-parole, gauche', c: '#b0413e' }, { n: 'M. Delmas', r: "dirigeant d'une compagnie aérienne", c: '#37474f' }, { n: 'Mme Nguyen', r: 'climatologue', c: '#00838f' }],
+    lignes: [
+      { p: 0, t: "Nous proposons une taxe de 30 € sur les vols courts, pour financer le train." },
+      { p: 2, t: "L'aviation représente environ 2 à 3 % des émissions mondiales de CO₂, et sa part augmente." },
+      { p: 1, t: "Taxer les billets, c'est interdire les vacances aux familles modestes !", f: 'homme-de-paille', x: "Une taxe sur les vols courts devient « interdire les vacances aux familles modestes »." },
+      { p: 0, t: "La taxe ne vise que les vols de moins de 500 km, quand un train fait le trajet en moins de quatre heures." },
+      { p: 1, t: "Mme Moreau n'a jamais dirigé une entreprise : elle ne comprend rien au transport aérien.", f: 'ad-hominem', x: "On attaque son parcours au lieu de répondre à sa proposition." },
+      { p: 2, t: "Si rien ne change, le trafic aérien continuera d'augmenter, et donc ses émissions : c'est ce que prévoient les projections du secteur lui-même." },
+      { p: 0, t: "Regardez ces images de forêts en flammes : comment pouvez-vous refuser cette taxe ?", f: 'emotion', x: "Les images émeuvent, mais ne montrent pas que cette taxe précise est la bonne réponse." },
+      { p: 1, t: "Une partie de la taxe pourrait servir à moderniser nos avions : là-dessus, nous serions prêts à discuter." },
+    ],
+  },
+  {
+    id: 'devoirs', titre: 'Faut-il supprimer les devoirs ?', palier: 3,
+    gens: [{ n: 'Mme Rossi', r: 'professeure des écoles', c: '#8e5a2b' }, { n: 'M. Kader', r: "père d'élève", c: '#3f6fb5' }, { n: 'Dr Martin', r: "chercheuse en sciences de l'éducation", c: '#6a8e3a' }],
+    lignes: [
+      { p: 1, t: "Je voudrais qu'on supprime les devoirs écrits à l'école primaire." },
+      { p: 0, t: "Les élèves qui font leurs devoirs ont de meilleures notes : ce sont donc les devoirs qui les rendent bons élèves.", f: 'correlation', x: "Les élèves déjà à l'aise font plus volontiers leurs devoirs : le lien peut aller dans l'autre sens, ou venir du milieu familial." },
+      { p: 2, t: "Les recherches montrent un effet faible des devoirs en primaire, plus net au collège." },
+      { p: 1, t: "Mon fils pleure tous les soirs devant ses exercices : les devoirs sont une torture pour tous les enfants.", f: 'anecdote', x: "Le cas de son fils, si pénible soit-il, ne dit rien de tous les enfants." },
+      { p: 0, t: "Personne n'a jamais prouvé que les devoirs étaient inutiles : ils sont donc indispensables.", f: 'ignorance', x: "L'absence de preuve contraire ne prouve pas que les devoirs sont indispensables ; et des études existent." },
+      { p: 2, t: "Une piste serait de remplacer les exercices écrits par de la lecture à voix haute, et d'en mesurer l'effet." },
+      { p: 1, t: "Pourquoi pas, si on évalue les résultats au bout d'un an." },
+    ],
+  },
+  {
+    id: 'revenu-universel', titre: 'Le revenu universel', palier: 3,
+    gens: [{ n: 'M. Lambert', r: 'député, droite', c: '#1a3a6b' }, { n: 'M. Haddad', r: 'syndicaliste', c: '#c62828' }, { n: 'Mme Chen', r: 'économiste', c: '#6a4c93' }],
+    lignes: [
+      { p: 1, t: "Un revenu universel de 800 € par mois permettrait à chacun de vivre dignement." },
+      { p: 2, t: "Pour tous les adultes, cela coûterait plus de 400 milliards d'euros par an, à financer en partie en supprimant d'autres aides." },
+      { p: 0, t: "Si on donne de l'argent sans travailler, plus personne ne travaillera et l'économie s'effondrera.", f: 'pente-glissante', x: "L'enchaînement est affirmé sans preuve ; les expériences menées ailleurs ne le montrent pas." },
+      { p: 1, t: "Les expériences menées en Finlande et au Kenya n'ont pas montré de baisse nette du travail." },
+      { p: 0, t: "M. Haddad est payé par un syndicat : forcément, il défend tout ce qui ressemble à une subvention.", f: 'ad-hominem', x: "On s'en prend à sa position personnelle au lieu de discuter les expériences qu'il cite." },
+      { p: 1, t: "Les riches se gavent pendant que le peuple crève : le revenu universel, c'est simplement la justice.", f: 'langage-charge', x: "« Se gavent », « crève » : les mots chargés remplacent les chiffres sur le financement." },
+      { p: 2, t: "Une version réservée aux 18-25 ans coûterait beaucoup moins cher et pourrait être testée d'abord." },
+      { p: 0, t: "Un essai limité à quelques départements, avec une évaluation sérieuse, je pourrais l'envisager." },
+    ],
+  },
+);
